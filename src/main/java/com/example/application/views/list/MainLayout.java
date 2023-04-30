@@ -1,14 +1,15 @@
 package com.example.application.views.list;
 
-import com.example.application.data.entity.UserEntity;
 import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -17,13 +18,11 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CssImport(value = "./styles/customStyles.css", include = "lumo-utility")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
     private final SecurityService securityService;
     private final HorizontalLayout header;
     private final Span titleContainer;
     private Tabs tabs;
-    private UserEntity userInSession;
     private Tab dashboardTab;
     private Tab ordersTab;
     private Tab customersTab;
@@ -34,7 +33,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     public MainLayout(@Autowired SecurityService securityService) {
         this.securityService = securityService;
-
         this.titleContainer = new Span();
         this.titleContainer.getElement().getThemeList().add("badge");
         this.titleContainer.getElement().getStyle().set("background", "none").set("color", "#5D60EF");
@@ -50,51 +48,25 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         this.header.setPadding(true);
         this.header.setFlexGrow(3);
         this.header.addClassName(LumoUtility.Padding.SMALL);
-        this.addToDrawer(this.tabs);
+        Image logo = new Image("/images/logo.jpeg", "My logo");
+        logo.setWidth("100%");
+        VerticalLayout drawer = new VerticalLayout(logo, this.tabs);
+        drawer.getStyle().set("background-color", "white");
+        drawer.setHeightFull();
+        this.addToDrawer(drawer);
         this.addToNavbar(this.header);
         this.setPrimarySection(Section.DRAWER);
+
+        this.getStyle().set("background-color", "white");
 
     }
 
     private void createNavbar() {
-
-//        if (this.securityService.getAuthenticatedUser() != null) {
-//            this.userInSession = this.userDetailsService.loadUserObjectByUsername(this.securityService.getAuthenticatedUser().getUsername());
-//            String initials = this.userInSession.getFirstName().substring(0, 1).toUpperCase() + this.userInSession.getLastName().substring(0, 1).toUpperCase();
-//
-//            Button initialsBadge = new Button(initials);
-//            initialsBadge.setHeightFull();
-//            initialsBadge.getElement().getThemeList().add("badge");
-//            initialsBadge.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.BOLD, LumoUtility.BorderRadius.LARGE);
-//            MenuBar menuBar = new MenuBar();
-//            menuBar.addClassNames(LumoUtility.Margin.Left.AUTO);
-//            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
-//
-//            MenuItem menuItem = menuBar.addItem(initialsBadge);
-//            SubMenu subMenu = menuItem.getSubMenu();
-//            subMenu.addItem("Profile");
-//            subMenu.addItem("Settings");
-//            subMenu.addItem("Help");
-//            subMenu.addItem("Sign out", menuItemClickEvent -> this.securityService.logout());
-//
-//
-//            // TODO implement the search bar
-//            TextField searchBar = new TextField();
-//            searchBar.addClassNames(
-//                    LumoUtility.BorderRadius.LARGE,
-//                    LumoUtility.Overflow.HIDDEN);
-//            searchBar.setPlaceholder("Search");
-//
-//            this.header.add(searchBar, menuBar);
-//            this.header.setFlexGrow(1, searchBar);
-//
-//        }
-
+        this.header.add(new Button("logout", click -> this.securityService.logout()));
     }
 
     private void createPrimaryNavigation() {
         this.tabs = new Tabs();
-        this.tabs.setWidthFull();
         this.tabs.addSelectedChangeListener(e -> {
             this.titleContainer.setText(e.getSelectedTab().getId().orElse(""));
             this.tabs.getChildren().forEach(tab -> tab.getElement().getStyle().set("background", "white").set("color", "gray").set("padding", "1em"));
@@ -175,7 +147,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
             case "documents" -> this.tabs.setSelectedTab(this.documentsTab);
             case "tasks" -> this.tabs.setSelectedTab(this.tasksTab);
             case "analytics" -> this.tabs.setSelectedTab(this.analyticsTab);
-            //default -> this.tabs.setSelectedTab(this.dashboardTab);
         }
     }
 }

@@ -4,7 +4,7 @@
     padding:1em;
     font-family:Roboto;
     font-weight:700;
-    margin:1em 2em 0 2em;
+    /*margin:1em 2em 0 2em;*/
     transition:all 200ms ease-in-out;
 }
 
@@ -13,6 +13,10 @@
     height:100%;
     width:auto;
     vertical-align: bottom;
+}
+
+#drawer{
+    background: "white";
 }
 
 html{

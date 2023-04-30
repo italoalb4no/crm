@@ -5,12 +5,13 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @PermitAll
 @Route(value = "dashboard", layout = MainLayout.class)
-//@RouteAlias(value = "", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
 @PageTitle("Dashboard")
 public class DashboardView extends VerticalLayout {
 

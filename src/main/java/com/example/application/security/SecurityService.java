@@ -1,6 +1,7 @@
 package com.example.application.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ public class SecurityService {
 
     private final AuthenticationContext authenticationContext;
 
+    @Autowired
     public SecurityService(AuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
     }
