@@ -1,7 +1,8 @@
 package com.example.application.data.entity;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.util.UUID;
 
@@ -9,10 +10,8 @@ import java.util.UUID;
 public class AddressEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    private String id;
     @Column(nullable = false, length = 20)
     private String country;
     @Column(nullable = false, length = 30)
@@ -31,10 +30,10 @@ public class AddressEntity {
     private String additionalNotes;
 
     public AddressEntity() {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
     }
 
-    public AddressEntity(UUID id, String country, String province, String region, String city, String firstAddressLine, String secondAddressLine, String zipCode, String additionalNotes) {
+    public AddressEntity(String id, String country, String province, String region, String city, String firstAddressLine, String secondAddressLine, String zipCode, String additionalNotes) {
         this.id = id;
         this.country = country;
         this.province = province;
@@ -58,11 +57,11 @@ public class AddressEntity {
         this.additionalNotes = address.additionalNotes;
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

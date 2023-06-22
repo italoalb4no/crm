@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public interface CustomerRepository extends JpaRepository<CustomerEntity, UUID> {
+public interface CustomerRepository extends JpaRepository<CustomerEntity, String> {
 
     @Query("select c from CustomerEntity c where c.email = ?1")
     Optional<CustomerEntity> findCustomerByEmailAddress(String email);

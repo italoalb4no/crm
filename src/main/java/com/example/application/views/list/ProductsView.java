@@ -1,6 +1,6 @@
 package com.example.application.views.list;
 
-import com.example.application.components.dialogs.NewItemDialog;
+import com.example.application.components.dialogs.ItemCreationDialog;
 import com.example.application.data.entity.ItemEntity;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.button.Button;
@@ -33,8 +33,8 @@ public class ProductsView extends VerticalLayout {
         this.omniService = omniService;
 
         Button createBtn = new Button("Create", VaadinIcon.PLUS.create(), e -> {
-            NewItemDialog newItemDialog = new NewItemDialog(this.omniService);
-            newItemDialog.open();
+            ItemCreationDialog itemCreationDialog = new ItemCreationDialog(this.omniService);
+            itemCreationDialog.open();
         });
         createBtn.getStyle().set("position", "absolute").set("right", "0.5em");
 

@@ -10,7 +10,8 @@ public class CrmService {
     private final OrderService orderService;
     private final AddressService addressService;
     private final ItemService itemService;
-    private MyUserDetailsService userDetailsService;
+    private final MyUserDetailsService userDetailsService;
+    private final DocumentService documentService;
 
 
     @Autowired
@@ -19,12 +20,14 @@ public class CrmService {
             OrderService orderService,
             AddressService addressService,
             ItemService itemService,
-            MyUserDetailsService userDetailsService) {
+            MyUserDetailsService userDetailsService,
+            DocumentService documentService) {
         this.customerService = customerService;
         this.orderService = orderService;
         this.addressService = addressService;
         this.itemService = itemService;
         this.userDetailsService = userDetailsService;
+        this.documentService = documentService;
     }
 
     public CustomerService getCustomerService() {
@@ -45,5 +48,9 @@ public class CrmService {
 
     public MyUserDetailsService getUserDetailsService() {
         return this.userDetailsService;
+    }
+
+    public DocumentService getDocumentService() {
+        return this.documentService;
     }
 }

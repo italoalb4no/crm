@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -31,10 +32,19 @@ public class UserEntity {
     private boolean isAdmin;
 
     public UserEntity() {
-
+        this.id = UUID.randomUUID().toString();
     }
 
-    public UserEntity(String id, String firstName, String lastName, String email, String userName, String encryptedPassword, String department, LocalDate creationDate, boolean isAdmin) {
+    public UserEntity(
+            String id,
+            String firstName,
+            String lastName,
+            String email,
+            String userName,
+            String encryptedPassword,
+            String department,
+            LocalDate creationDate,
+            boolean isAdmin) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,7 +57,7 @@ public class UserEntity {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -55,7 +65,7 @@ public class UserEntity {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -63,7 +73,7 @@ public class UserEntity {
     }
 
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {
@@ -71,7 +81,7 @@ public class UserEntity {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -79,7 +89,7 @@ public class UserEntity {
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public void setUserName(String userName) {
@@ -87,7 +97,7 @@ public class UserEntity {
     }
 
     public String getEncryptedPassword() {
-        return encryptedPassword;
+        return this.encryptedPassword;
     }
 
     public void setEncryptedPassword(String encryptedPassword) {
@@ -95,7 +105,7 @@ public class UserEntity {
     }
 
     public String getDepartment() {
-        return department;
+        return this.department;
     }
 
     public void setDepartment(String department) {
@@ -103,7 +113,7 @@ public class UserEntity {
     }
 
     public LocalDate getCreationDate() {
-        return creationDate;
+        return this.creationDate;
     }
 
     public void setCreationDate(LocalDate creationDate) {
@@ -111,10 +121,10 @@ public class UserEntity {
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return this.isAdmin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.isAdmin = admin;
     }
 }

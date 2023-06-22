@@ -1,10 +1,12 @@
 package com.example.application.components.dialogs;
 
+import com.example.application.data.entity.ItemEntity;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -16,20 +18,23 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewItemDialog extends CustomDialog {
+public class ItemCreationDialog extends CustomDialog {
 
-    private final CrmService omniService;
+    private final CrmService crmService;
 
     private final VerticalLayout mainLayout;
+    private final ItemEntity item;
     private Button nextSectionBtn;
 
-    public NewItemDialog(@Autowired CrmService omniService) {
+    public ItemCreationDialog(@Autowired CrmService crmService) {
         super(false, false, true, true);
-        this.omniService = omniService;
+        this.crmService = crmService;
         this.setWidth(80, Unit.PERCENTAGE);
         this.setHeight(70, Unit.PERCENTAGE);
 
@@ -41,11 +46,13 @@ public class NewItemDialog extends CustomDialog {
         this.mainLayout.setSizeFull();
         this.add(this.mainLayout);
 
+        this.item = new ItemEntity();
+
         this.mainInfoSection();
     }
 
     private void mainInfoSection() {
-        this.highlightSection(1);
+        this.highlightSection(0);
 
         this.mainLayout.removeAll();
 
@@ -53,12 +60,20 @@ public class NewItemDialog extends CustomDialog {
         this.nextSectionBtn = new Button("Go on", VaadinIcon.ARROW_RIGHT.create());
         this.getFooter().add(this.nextSectionBtn);
         this.nextSectionBtn.setEnabled(false);
-        this.nextSectionBtn.addClickListener(e -> this.secondSection());
 
         TextField productName = new TextField("Product name");
+        productName.setRequired(true);
+
         BigDecimalField priceField = new BigDecimalField("Price");
-        priceField.setSuffixComponent(new Text("$"));
+        priceField.setRequired(true);
+        priceField.setSuffixComponent(new Div(new Text("$")));
         priceField.setWidth(50, Unit.PERCENTAGE);
+
+        productName.addValueChangeListener(textField -> {
+            if (!textField.getHasValue().isEmpty() && priceField.getValue() != null) {
+                this.nextSectionBtn.setEnabled(true);
+            }
+        });
         TextArea description = new TextArea("Description");
 
         description.setMaxLength(500);
@@ -84,8 +99,19 @@ public class NewItemDialog extends CustomDialog {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            // Do something with the file data
-            // processFile(inputStream, fileName);
+            try {
+                this.crmService
+                        .getDocumentService()
+                        .create(
+                                inputStream,
+                                fileName,
+                                event.getMIMEType(),
+                                event.getContentLength());
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         VerticalLayout rightContainer = new VerticalLayout(upload);
@@ -97,6 +123,11 @@ public class NewItemDialog extends CustomDialog {
 
         this.mainLayout.add(splitLayout);
 
+        this.nextSectionBtn.addClickListener(click -> {
+            if (!productName.getValue().trim().isEmpty() && priceField.getValue() != null) {
+                this.secondSection();
+            }
+        });
     }
 
     private void secondSection() {

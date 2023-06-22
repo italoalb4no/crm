@@ -1,9 +1,10 @@
 package com.example.application.data.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,7 +13,6 @@ public class ItemEntity {
 
     @Id
     @GeneratedValue
-    //(type = "uuid-char")
     private UUID id;
     @Column
     private LocalDate creationDate;
@@ -22,22 +22,10 @@ public class ItemEntity {
     @Column
     @Length(max = 500)
     private String description;
+    @Column
+    private List<DocumentEntity> attachment;
 
     public ItemEntity() {
-    }
-
-    public ItemEntity(UUID id, LocalDate creationDate, String name, String description) {
-        this.id = id;
-        this.creationDate = creationDate;
-        this.name = name;
-        this.description = description;
-    }
-
-    public ItemEntity(ItemEntity item) {
-        this.id = item.id;
-        this.creationDate = item.creationDate;
-        this.name = item.name;
-        this.description = item.description;
     }
 
     public UUID getId() {
@@ -70,5 +58,13 @@ public class ItemEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<DocumentEntity> getAttachment() {
+        return this.attachment;
+    }
+
+    public void setAttachment(List<DocumentEntity> attachment) {
+        this.attachment = attachment;
     }
 }

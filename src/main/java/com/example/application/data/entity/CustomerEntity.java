@@ -1,7 +1,6 @@
 package com.example.application.data.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -11,10 +10,8 @@ import java.util.UUID;
 public class CustomerEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    private String id;
     @Column()
     private LocalDate creationDate;
     @Column()
@@ -49,11 +46,10 @@ public class CustomerEntity {
     private AddressEntity residence;
 
     public CustomerEntity() {
-        // this.id = UUID.fromString(LocalDateTime.now().toString());
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
     }
 
-    public CustomerEntity(UUID id, LocalDate creationDate, LocalDate dateOfBirth, boolean privateCustomer, String firstName, String lastName, String email, String landlineNumber, String fiscalCode, String vatNumber, String mobileNumber, String userName, String encryptedPassword, AddressEntity domicile, AddressEntity residence) {
+    public CustomerEntity(String id, LocalDate creationDate, LocalDate dateOfBirth, boolean privateCustomer, String firstName, String lastName, String email, String landlineNumber, String fiscalCode, String vatNumber, String mobileNumber, String userName, String encryptedPassword, AddressEntity domicile, AddressEntity residence) {
         this.id = id;
         this.creationDate = creationDate;
         this.dateOfBirth = dateOfBirth;
@@ -71,11 +67,11 @@ public class CustomerEntity {
         this.residence = residence;
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

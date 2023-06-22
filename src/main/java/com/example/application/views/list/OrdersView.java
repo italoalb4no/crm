@@ -1,6 +1,6 @@
 package com.example.application.views.list;
 
-import com.example.application.components.dialogs.NewOrderDialog;
+import com.example.application.components.dialogs.OrderCreationDialog;
 import com.example.application.data.entity.OrderEntity;
 import com.example.application.data.entity.UserEntity;
 import com.example.application.data.service.CrmService;
@@ -35,8 +35,8 @@ public class OrdersView extends VerticalLayout {
         this.omniService = omniService;
 
         Button createBtn = new Button("Create", VaadinIcon.PLUS.create(), e -> {
-            NewOrderDialog newOrderDialog = new NewOrderDialog(this.omniService);
-            newOrderDialog.open();
+            OrderCreationDialog orderCreationDialog = new OrderCreationDialog(this.omniService);
+            orderCreationDialog.open();
         });
         createBtn.getStyle().set("position", "absolute").set("right", "0.5em");
 

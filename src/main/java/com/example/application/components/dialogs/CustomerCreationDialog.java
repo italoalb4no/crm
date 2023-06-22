@@ -7,13 +7,11 @@ import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -29,17 +27,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewCustomerDialog extends CustomDialog {
+public class CustomerCreationDialog extends CustomDialog {
 
     private final CrmService omniService;
-    private final Button closeBtn;
     private final VerticalLayout mainLayout;
     private final CustomerEntity customer;
     private Button nextSectionBtn;
     private Button previousSectionBtn;
     private Boolean privateCustomer;
 
-    public NewCustomerDialog(@Autowired CrmService omniService) {
+    public CustomerCreationDialog(@Autowired CrmService omniService) {
         super(false, false, true, true);
         this.omniService = omniService;
         this.setWidth(80, Unit.PERCENTAGE);
@@ -49,12 +46,6 @@ public class NewCustomerDialog extends CustomDialog {
         HorizontalLayout topContainer = new HorizontalLayout();
         topContainer.setWidthFull();
         topContainer.setHeight("auto");
-
-        Icon crossIcon = new Icon(VaadinIcon.CLOSE);
-        this.closeBtn = new Button(crossIcon,
-                (e) -> this.close());
-        this.closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        this.closeBtn.addClassName(LumoUtility.Margin.Left.AUTO);
 
         this.mainLayout = new VerticalLayout();
         this.mainLayout.setSizeFull();
@@ -68,6 +59,7 @@ public class NewCustomerDialog extends CustomDialog {
         sections.add("Main information");
         sections.add("AddressEntity information");
         sections.add("Summary");
+        sections.add("Summary");
         this.setHeader(sections);
 
         this.customer = new CustomerEntity();
@@ -80,7 +72,7 @@ public class NewCustomerDialog extends CustomDialog {
         this.mainLayout.removeAll();
         this.nextSectionBtn = new Button("Go on", VaadinIcon.ARROW_RIGHT.create());
 
-        this.highlightSection(1);
+        this.highlightSection(0);
 
         this.getFooter().removeAll();
         this.getFooter().add(this.nextSectionBtn);
@@ -144,7 +136,7 @@ public class NewCustomerDialog extends CustomDialog {
 
     private void secondSection() {
 
-        this.highlightSection(2);
+        this.highlightSection(1);
 
         this.mainLayout.removeAll();
         this.previousSectionBtn = new Button("Go back", VaadinIcon.ARROW_LEFT.create());
@@ -200,7 +192,7 @@ public class NewCustomerDialog extends CustomDialog {
                             && !lastNameField.isEmpty() && !lastNameField.isInvalid()
                             && !mobilePhoneField.isEmpty() && !mobilePhoneField.isInvalid()
                             && !emailField.isEmpty() && !emailField.isInvalid()) {
-                        // Check if the email has been already set previously
+                        // Check if the email has already been set previously
                         // And if the user has already inserted this email
                         // there is no need to launch another query
                         if (!this.omniService.getCustomerService().isEmailAddressAlreadyRegistered(emailField.getValue())) {
@@ -237,7 +229,7 @@ public class NewCustomerDialog extends CustomDialog {
     }
 
     private void thirdSection() {
-        this.highlightSection(3);
+        this.highlightSection(2);
 
         this.mainLayout.removeAll();
         this.previousSectionBtn = new Button("Go back", VaadinIcon.ARROW_LEFT.create());
@@ -333,21 +325,34 @@ public class NewCustomerDialog extends CustomDialog {
                 this.getFooter().add(this.nextSectionBtn);
 
                 if (this.customer.getDomicile() != null) {
-                    domicileFormLayout.getFirstAddressLine().setValue(this.customer.getDomicile().getFirstAddressLine());
-                    domicileFormLayout.getSecondAddressLine().setValue(this.customer.getDomicile().getSecondAddressLine());
-                    domicileFormLayout.getRegionField().setValue(this.customer.getDomicile().getRegion());
-                    domicileFormLayout.getCountryField().setValue(this.customer.getDomicile().getCountry());
-                    domicileFormLayout.getZipCodeField().setValue(this.customer.getDomicile().getZipCode());
-                    domicileFormLayout.getCityField().setValue(this.customer.getDomicile().getCity());
-                    domicileFormLayout.getProvinceField().setValue(this.customer.getDomicile().getProvince());
+                    domicileFormLayout.getFirstAddressLine()
+                            .setValue(this.customer.getDomicile().getFirstAddressLine());
+                    domicileFormLayout.getSecondAddressLine()
+                            .setValue(this.customer.getDomicile().getSecondAddressLine());
+                    domicileFormLayout.getRegionField()
+                            .setValue(this.customer.getDomicile().getRegion());
+                    domicileFormLayout.getCountryField()
+                            .setValue(this.customer.getDomicile().getCountry());
+                    domicileFormLayout.getZipCodeField()
+                            .setValue(this.customer.getDomicile().getZipCode());
+                    domicileFormLayout.getCityField()
+                            .setValue(this.customer.getDomicile().getCity());
+                    domicileFormLayout.getProvinceField()
+                            .setValue(this.customer.getDomicile().getProvince());
 
                     if (!this.customer.getDomicile().getId().equals(this.customer.getResidence().getId())) {
-                        residenceFormLayout.getFirstAddressLine().setValue(this.customer.getResidence().getFirstAddressLine());
-                        residenceFormLayout.getSecondAddressLine().setValue(this.customer.getResidence().getSecondAddressLine());
-                        residenceFormLayout.getRegionField().setValue(this.customer.getResidence().getRegion());
-                        residenceFormLayout.getCountryField().setValue(this.customer.getResidence().getCountry());
-                        residenceFormLayout.getZipCodeField().setValue(this.customer.getResidence().getZipCode());
-                        residenceFormLayout.getCityField().setValue(this.customer.getResidence().getCity());
+                        residenceFormLayout.getFirstAddressLine()
+                                .setValue(this.customer.getResidence().getFirstAddressLine());
+                        residenceFormLayout.getSecondAddressLine()
+                                .setValue(this.customer.getResidence().getSecondAddressLine());
+                        residenceFormLayout.getRegionField()
+                                .setValue(this.customer.getResidence().getRegion());
+                        residenceFormLayout.getCountryField()
+                                .setValue(this.customer.getResidence().getCountry());
+                        residenceFormLayout.getZipCodeField()
+                                .setValue(this.customer.getResidence().getZipCode());
+                        residenceFormLayout.getCityField()
+                                .setValue(this.customer.getResidence().getCity());
                     } else {
                         singularAddress.setEnabled(true);
                         singularAddress.setValue(true);
@@ -361,7 +366,7 @@ public class NewCustomerDialog extends CustomDialog {
     }
 
     private void fourthSection() {
-        this.highlightSection(4);
+        this.highlightSection(3);
 
         this.mainLayout.removeAll();
         this.previousSectionBtn = new Button("Go back", VaadinIcon.ARROW_LEFT.create());
@@ -371,14 +376,38 @@ public class NewCustomerDialog extends CustomDialog {
         this.getFooter().add(this.previousSectionBtn);
 
         if (this.privateCustomer) {
-            Span firstName = this.createSpan("First name: ", this.customer.getFirstName());
-            Span lastName = this.createSpan("Last name: ", this.customer.getLastName());
-            Span dateOfBirth = this.createSpan("Date of birth: ", (this.customer.getDateOfBirth() == null ? "Not provided" : this.customer.getDateOfBirth().toString()));
-            Span email = this.createSpan("Email: ", this.customer.getEmail());
-            Span landlineNumber = this.createSpan("Landline number: ", (this.customer.getLandlineNumber().isEmpty() ? "Not provided" : this.customer.getLandlineNumber()));
-            Span mobileNumber = this.createSpan("Mobile number: ", this.customer.getMobileNumber());
-            Span fiscalCode = this.createSpan("Fiscal Code: ", (this.customer.getFiscalCode().isEmpty() ? "Not provided" : this.customer.getFiscalCode()));
-            Span vatNumber = this.createSpan("VAT number: ", (this.customer.getVatNumber().isEmpty() ? "Not provided" : this.customer.getVatNumber()));
+            Span firstName = this.createSpan(
+                    "First name: ",
+                    this.customer.getFirstName());
+            Span lastName = this.createSpan(
+                    "Last name: ",
+                    this.customer.getLastName());
+            Span dateOfBirth = this.createSpan(
+                    "Date of birth: ",
+                    (this.customer.getDateOfBirth() == null ?
+                            "Not provided" :
+                            this.customer.getDateOfBirth().toString()));
+            Span email = this.createSpan(
+                    "Email: ",
+                    this.customer.getEmail());
+            Span landlineNumber = this.createSpan(
+                    "Landline number: ",
+                    (this.customer.getLandlineNumber().isEmpty() ?
+                            "Not provided" :
+                            this.customer.getLandlineNumber()));
+            Span mobileNumber = this.createSpan(
+                    "Mobile number: ",
+                    this.customer.getMobileNumber());
+            Span fiscalCode = this.createSpan(
+                    "Fiscal Code: ",
+                    (this.customer.getFiscalCode().isEmpty() ?
+                            "Not provided" :
+                            this.customer.getFiscalCode()));
+            Span vatNumber = this.createSpan(
+                    "VAT number: ",
+                    (this.customer.getVatNumber().isEmpty() ?
+                            "Not provided" :
+                            this.customer.getVatNumber()));
 
             FormLayout mainInfoForm = new FormLayout(
                     firstName,
@@ -392,12 +421,24 @@ public class NewCustomerDialog extends CustomDialog {
             mainInfoForm.setWidthFull();
             mainInfoForm.addClassName(LumoUtility.Padding.LARGE);
 
-            Span domicileFirstAddressLine = this.createSpan("First address line: ", this.customer.getDomicile().getFirstAddressLine());
-            Span domicileSecondAddressLine = this.createSpan("Last address line: ", this.customer.getDomicile().getSecondAddressLine());
-            Span domicileRegion = this.createSpan("Region: ", this.customer.getDomicile().getRegion());
-            Span domicileProvince = this.createSpan("Province: ", this.customer.getDomicile().getProvince());
-            Span domicileCity = this.createSpan("City: ", this.customer.getDomicile().getCity());
-            Span domicileZipCode = this.createSpan("Zip Code: ", this.customer.getDomicile().getZipCode());
+            Span domicileFirstAddressLine = this.createSpan(
+                    "First address line: ",
+                    this.customer.getDomicile().getFirstAddressLine());
+            Span domicileSecondAddressLine = this.createSpan(
+                    "Last address line: ",
+                    this.customer.getDomicile().getSecondAddressLine());
+            Span domicileRegion = this.createSpan(
+                    "Region: ",
+                    this.customer.getDomicile().getRegion());
+            Span domicileProvince = this.createSpan(
+                    "Province: ",
+                    this.customer.getDomicile().getProvince());
+            Span domicileCity = this.createSpan(
+                    "City: ",
+                    this.customer.getDomicile().getCity());
+            Span domicileZipCode = this.createSpan(
+                    "Zip Code: ",
+                    this.customer.getDomicile().getZipCode());
 
             FormLayout domicileForm = new FormLayout(
                     domicileFirstAddressLine,
@@ -409,12 +450,24 @@ public class NewCustomerDialog extends CustomDialog {
             domicileForm.setWidthFull();
             domicileForm.addClassName(LumoUtility.Padding.LARGE);
 
-            Span residenceFirstAddressLine = this.createSpan("First address line: ", this.customer.getResidence().getFirstAddressLine());
-            Span residenceSecondAddressLine = this.createSpan("Last address line: ", this.customer.getResidence().getSecondAddressLine());
-            Span residenceRegion = this.createSpan("Region: ", this.customer.getResidence().getRegion());
-            Span residenceProvince = this.createSpan("Province: ", this.customer.getResidence().getProvince());
-            Span residenceCity = this.createSpan("City: ", this.customer.getResidence().getCity());
-            Span residenceZipCode = this.createSpan("Zip Code: ", this.customer.getResidence().getZipCode());
+            Span residenceFirstAddressLine = this.createSpan(
+                    "First address line: ",
+                    this.customer.getResidence().getFirstAddressLine());
+            Span residenceSecondAddressLine = this.createSpan(
+                    "Last address line: ",
+                    this.customer.getResidence().getSecondAddressLine());
+            Span residenceRegion = this.createSpan(
+                    "Region: ",
+                    this.customer.getResidence().getRegion());
+            Span residenceProvince = this.createSpan(
+                    "Province: ",
+                    this.customer.getResidence().getProvince());
+            Span residenceCity = this.createSpan(
+                    "City: ",
+                    this.customer.getResidence().getCity());
+            Span residenceZipCode = this.createSpan(
+                    "Zip Code: ",
+                    this.customer.getResidence().getZipCode());
 
             FormLayout residenceForm = new FormLayout(
                     residenceFirstAddressLine,
@@ -445,7 +498,10 @@ public class NewCustomerDialog extends CustomDialog {
 
             this.mainLayout.add(mainInfoDetails, addressDetails);
 
-            Button confirmBtn = new Button("Confirm", VaadinIcon.ARROW_RIGHT.create(), e -> this.confirmation());
+            Button confirmBtn = new Button(
+                    "Confirm",
+                    VaadinIcon.ARROW_RIGHT.create(),
+                    e -> this.confirmation());
             confirmBtn.addClassName(LumoUtility.Margin.Left.AUTO);
             this.getFooter().add(confirmBtn);
         }
@@ -455,7 +511,6 @@ public class NewCustomerDialog extends CustomDialog {
         this.mainLayout.removeAll();
         this.getHeader().removeAll();
         this.getFooter().removeAll();
-        this.getHeader().add(this.closeBtn);
 
         if (this.privateCustomer) {
 
@@ -466,17 +521,29 @@ public class NewCustomerDialog extends CustomDialog {
                 if (!this.omniService.getAddressService().isAddressAlreadyRegistered(
                         this.customer.getResidence().getFirstAddressLine(),
                         this.customer.getResidence().getZipCode())) {
-                    this.omniService.getAddressService().createAddress(this.customer.getResidence());
+                    try {
+                        this.omniService.getAddressService().createAddress(this.customer.getResidence());
+                    } catch (Exception ex) {
+                        this.showError("The address couldn't be created");
+                    }
                 }
             }
 
             if (!this.omniService.getAddressService().isAddressAlreadyRegistered(
                     this.customer.getDomicile().getFirstAddressLine(),
                     this.customer.getDomicile().getZipCode())) {
-                this.omniService.getAddressService().createAddress(this.customer.getDomicile());
+                try {
+                    this.omniService.getAddressService().createAddress(this.customer.getDomicile());
+                } catch (Exception ex) {
+                    this.showError("The address couldn't be created");
+                }
             }
 
-            this.omniService.getCustomerService().createCustomer(this.customer);
+            try {
+                this.omniService.getCustomerService().createCustomer(this.customer);
+            } catch (Exception ex) {
+                this.showError("The customer couldn't be created");
+            }
 
         } else {
             // TODO add address of the company

@@ -18,35 +18,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewOrderDialog extends CustomDialog {
+public class OrderCreationDialog1 extends CustomDialog {
     private final CrmService omniService;
 
-    public NewOrderDialog(@Autowired CrmService omniService) {
-        super(false, false, true, true);
+    private SplitLayout splitLayout;
+    private Button nextSectionBtn;
+    private Button previousSectionBtn;
+
+    public OrderCreationDialog1(@Autowired CrmService omniService) {
+        super(
+                false,
+                false,
+                true,
+                true);
         this.omniService = omniService;
         this.setWidth(75, Unit.PERCENTAGE);
         this.setHeight(55, Unit.PERCENTAGE);
 
         List<String> sections = new ArrayList<>();
-        sections.add("CustomerEntity Details");
+        sections.add("Customer Details");
         sections.add("Items");
         sections.add("Shipment");
         sections.add("Payment and Confirmation");
         this.setHeader(sections);
 
-        this.add(this.customerSection());
+        this.customerSection();
     }
 
-    private VerticalLayout customerSection() {
-        this.highlightSection(1);
+    private void customerSection() {
+        this.highlightSection(0);
+        this.removeAll();
 
-        VerticalLayout container = new VerticalLayout();
+        this.nextSectionBtn = new Button(
+                "Go on",
+                VaadinIcon.ARROW_RIGHT.create(),
+                click -> this.itemsSelection());
+        this.nextSectionBtn.setEnabled(false);
+
+        this.getFooter().removeAll();
+        this.getFooter().add(this.nextSectionBtn);
 
         HorizontalLayout leftTitle = new HorizontalLayout();
         Icon userIcon = new Icon(VaadinIcon.USER);
         userIcon.addClassName(LumoUtility.Margin.Left.AUTO);
         leftTitle.add(new Text("Existing customer"), userIcon);
-        leftTitle.getStyle().set("padding", "1.2em").set("background", "#808080").set("color", "white");
+        leftTitle.getStyle()
+                .set("padding", "1.2em")
+                .set("background", "#808080")
+                .set("color", "white");
         leftTitle.setWidthFull();
         leftTitle.addClassName(LumoUtility.BorderRadius.LARGE);
 
@@ -54,14 +73,21 @@ public class NewOrderDialog extends CustomDialog {
         Icon plusIcon = new Icon(VaadinIcon.PLUS);
         plusIcon.addClassName(LumoUtility.Margin.Left.AUTO);
         rightTitle.add(new Text("New customer"), plusIcon);
-        rightTitle.getStyle().set("padding", "1.2em").set("background", "#808080").set("color", "white");
+        rightTitle.getStyle()
+                .set("padding", "1.2em")
+                .set("background", "#808080")
+                .set("color", "white");
         rightTitle.setWidthFull();
         rightTitle.addClassName(LumoUtility.BorderRadius.LARGE);
 
-        Button newCustomerBtn = new Button("Create new customer", VaadinIcon.PLUS.create(), e -> {
-            NewCustomerDialog newCustomerDialog = new NewCustomerDialog(this.omniService);
-            newCustomerDialog.open();
-        });
+        Button newCustomerBtn = new Button(
+                "Create new customer",
+                VaadinIcon.PLUS.create(),
+                click -> {
+                    CustomerCreationDialog customerCreationDialog = new CustomerCreationDialog(this.omniService);
+                    customerCreationDialog.open();
+                }
+        );
         newCustomerBtn.getStyle()
                 .set("background", "#5D60EF")
                 .set("color", "white")
@@ -70,8 +96,7 @@ public class NewOrderDialog extends CustomDialog {
         newCustomerBtn.addClassNames(LumoUtility.BorderRadius.LARGE);
         newCustomerBtn.setWidth(90, Unit.PERCENTAGE);
 
-        ComboBox.ItemFilter<CustomerEntity> filter = (customer,
-                                                      filterString) -> (
+        ComboBox.ItemFilter<CustomerEntity> filter = (customer, filterString) -> (
                 customer.getFirstName() + " " + customer.getLastName())
                 .toLowerCase().indexOf(filterString.toLowerCase()) > -1;
 
@@ -81,41 +106,66 @@ public class NewOrderDialog extends CustomDialog {
         comboBox.setItemLabelGenerator(
                 customer -> customer.getFirstName() + " " + customer.getLastName());
         comboBox.setWidth(90, Unit.PERCENTAGE);
+        comboBox.addValueChangeListener(click -> this.nextSectionBtn.setEnabled(true));
 
         Button refreshBtn = new Button(
                 VaadinIcon.REFRESH.create(),
-                e -> comboBox.setItems(filter, this.omniService.getCustomerService().getAllCustomers()));
+                click -> comboBox.setItems(
+                        filter,
+                        this.omniService.getCustomerService().getAllCustomers()
+                )
+        );
 
         HorizontalLayout searchSection = new HorizontalLayout(comboBox, refreshBtn);
         searchSection.setWidthFull();
         searchSection.setAlignItems(FlexComponent.Alignment.BASELINE);
 
-        container.setSizeFull();
 
-        VerticalLayout leftContainer = new VerticalLayout(leftTitle, searchSection);
+        this.createSplitLayout(
+                new VerticalLayout(leftTitle, searchSection),
+                new VerticalLayout(rightTitle, newCustomerBtn));
+
+        this.splitLayout.setSizeFull();
+        this.add(this.splitLayout);
+
+    }
+
+    private void itemsSelection() {
+        this.highlightSection(1);
+        this.removeAll();
+        this.previousSectionBtn = new Button(
+                "Go back",
+                VaadinIcon.ARROW_LEFT.create(),
+                click -> this.customerSection()
+        );
+        this.previousSectionBtn.addClassName(LumoUtility.Margin.Right.AUTO);
+        this.nextSectionBtn = new Button(
+                "Go on",
+                VaadinIcon.ARROW_RIGHT.create(),
+                click -> this.lolSection()
+        );
+
+        this.getFooter().removeAll();
+        this.getFooter().add(this.previousSectionBtn, this.nextSectionBtn);
+
+        this.createSplitLayout(new VerticalLayout(), new VerticalLayout());
+    }
+
+    private void lolSection() {
+        this.highlightSection(3);
+    }
+
+    private void createSplitLayout(VerticalLayout leftContainer, VerticalLayout rightContainer) {
         leftContainer.setAlignItems(FlexComponent.Alignment.CENTER);
         leftContainer.setHeightFull();
         leftContainer.setWidth(50, Unit.PERCENTAGE);
 
-        VerticalLayout rightContainer = new VerticalLayout(rightTitle, newCustomerBtn);
         rightContainer.setAlignItems(FlexComponent.Alignment.CENTER);
         rightContainer.setHeightFull();
         rightContainer.setWidth(50, Unit.PERCENTAGE);
 
-        SplitLayout splitLayout = new SplitLayout(leftContainer, rightContainer);
-        splitLayout.setSizeFull();
-
-        Button nextSectionBtn = new Button("Go on", VaadinIcon.ARROW_RIGHT.create(), e -> this.itemsSelection());
-        nextSectionBtn.addClassName(LumoUtility.Margin.Left.AUTO);
-        nextSectionBtn.getStyle().set("color", "#5D60EF");
-        nextSectionBtn.setEnabled(false);
-
-        container.add(splitLayout, nextSectionBtn);
-
-        return container;
+        this.splitLayout = new SplitLayout(leftContainer, rightContainer);
+        this.splitLayout.setSizeFull();
     }
 
-    private void itemsSelection() {
-
-    }
 }
