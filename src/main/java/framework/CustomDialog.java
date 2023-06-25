@@ -1,9 +1,8 @@
-package com.example.application.components.dialogs;
+package framework;
 
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,7 +13,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomDialog extends Dialog {
+public class CustomDialog extends ChainedDialog {
 
     private List<HorizontalLayout> headersList;
     private List<Avatar> avatarList;

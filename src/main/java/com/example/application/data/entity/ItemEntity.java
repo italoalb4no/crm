@@ -23,7 +23,8 @@ public class ItemEntity {
     @Length(max = 500)
     private String description;
     @Column
-    private List<DocumentEntity> attachment;
+    @OneToMany
+    private List<DocumentEntity> documents;
 
     public ItemEntity() {
     }
@@ -60,11 +61,11 @@ public class ItemEntity {
         this.description = description;
     }
 
-    public List<DocumentEntity> getAttachment() {
-        return this.attachment;
+    public List<DocumentEntity> getDocuments() {
+        return this.documents;
     }
 
-    public void setAttachment(List<DocumentEntity> attachment) {
-        this.attachment = attachment;
+    public void setDocuments(List<DocumentEntity> documents) {
+        this.documents = documents;
     }
 }

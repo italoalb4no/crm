@@ -32,7 +32,7 @@ public class DocumentService {
     }
 
     @Transactional
-    public void create(
+    public DocumentEntity create(
             InputStream inputStream,
             String fileName,
             String contentType,
@@ -43,7 +43,7 @@ public class DocumentService {
         document.setSize(size);
         document.setHash();
         storeDocument(inputStream, document.getHash());
-        this.documentRepository.save(document);
+        return this.documentRepository.save(document);
     }
 
     private void storeDocument(InputStream inputStream, String hash) throws IOException {

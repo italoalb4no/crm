@@ -24,6 +24,9 @@ public class DocumentEntity {
     private long size = 0;
     @Column(name = "hash", nullable = false, unique = true)
     private String hash;
+    @ManyToOne
+    @JoinColumn(name = "item_id", nullable = false)
+    private ItemEntity item;
 
     public Long getId() {
         return this.id;

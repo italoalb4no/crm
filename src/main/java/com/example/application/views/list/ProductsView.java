@@ -25,29 +25,36 @@ public class ProductsView extends VerticalLayout {
     private final VerticalLayout mainLayout;
     private final boolean initialize;
     @Autowired
-    private final CrmService omniService;
+    private final CrmService crmService;
 
-    public ProductsView(@Autowired CrmService omniService) {
+    public ProductsView(@Autowired CrmService crmService) {
         this.mainLayout = new VerticalLayout();
         this.mainLayout.setSizeFull();
-        this.omniService = omniService;
+        this.crmService = crmService;
 
-        Button createBtn = new Button("Create", VaadinIcon.PLUS.create(), e -> {
-            ItemCreationDialog itemCreationDialog = new ItemCreationDialog(this.omniService);
-            itemCreationDialog.open();
-        });
+        Button createBtn = new Button(
+                "Create",
+                VaadinIcon.PLUS.create(),
+                click -> {
+                    ItemCreationDialog itemCreationDialog = new ItemCreationDialog(this.crmService);
+                    itemCreationDialog.open();
+                });
         createBtn.getStyle().set("position", "absolute").set("right", "0.5em");
 
         this.initialize = true;
 
-        HorizontalLayout topLayout = new HorizontalLayout(this.getSecondaryNavigation(), createBtn);
+        HorizontalLayout topLayout = new HorizontalLayout(
+                this.getSecondaryNavigation(),
+                createBtn);
         this.add(topLayout, this.mainLayout);
     }
 
     private Tabs getSecondaryNavigation() {
         Tabs tabs = new Tabs();
         Tab allTab = new Tab("All");
-        allTab.getElement().addEventListener("click", event -> this.allItemsSection());
+        allTab.getElement().addEventListener(
+                "click",
+                click -> this.allItemsSection());
         Tab unavailableTab = new Tab("Unavailable");
         unavailableTab.getElement().addEventListener("click", event -> this.unavailableItemsSection());
 
@@ -67,7 +74,7 @@ public class ProductsView extends VerticalLayout {
     private void allItemsSection() {
         Grid<ItemEntity> grid = this.createGrid();
 
-        List<ItemEntity> items = this.omniService.getItemService().getAllItems();
+        List<ItemEntity> items = this.crmService.getItemService().getAllItems();
         grid.setItems(items);
 
         this.mainLayout.removeAll();
@@ -77,7 +84,9 @@ public class ProductsView extends VerticalLayout {
     private void unavailableItemsSection() {
         Grid<ItemEntity> grid = this.createGrid();
 
-        List<ItemEntity> items = this.omniService.getItemService().getAllItems();
+        List<ItemEntity> items = this.crmService
+                .getItemService()
+                .getAllItems();
         grid.setItems(items);
 
     }
@@ -85,9 +94,15 @@ public class ProductsView extends VerticalLayout {
     private Grid<ItemEntity> createGrid() {
         Grid<ItemEntity> grid = new Grid<>(ItemEntity.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addColumn(ItemEntity::getId).setHeader("ID").setResizable(true);
-        grid.addColumn(ItemEntity::getCreationDate).setHeader("Creation Date").setResizable(true);
-        grid.addColumn(ItemEntity::getName).setHeader("Name").setResizable(true);
+        grid.addColumn(ItemEntity::getId)
+                .setHeader("ID")
+                .setResizable(true);
+        grid.addColumn(ItemEntity::getCreationDate)
+                .setHeader("Creation Date")
+                .setResizable(true);
+        grid.addColumn(ItemEntity::getName)
+                .setHeader("Name")
+                .setResizable(true);
         grid.addColumn(ItemEntity::getDescription)
                 .setHeader("Description")
                 .setResizable(true)

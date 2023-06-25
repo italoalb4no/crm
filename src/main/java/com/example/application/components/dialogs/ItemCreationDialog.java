@@ -1,5 +1,6 @@
 package com.example.application.components.dialogs;
 
+import com.example.application.data.entity.DocumentEntity;
 import com.example.application.data.entity.ItemEntity;
 import com.example.application.data.service.CrmService;
 import com.vaadin.flow.component.Text;
@@ -16,24 +17,28 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import framework.ChainedVerticalLayout;
+import framework.CustomDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCreationDialog extends CustomDialog {
 
     private final CrmService crmService;
-
-    private final VerticalLayout mainLayout;
+    private final ChainedVerticalLayout mainLayout;
     private final ItemEntity item;
     private Button nextSectionBtn;
 
-    public ItemCreationDialog(@Autowired CrmService crmService) {
-        super(false, false, true, true);
+    @Autowired
+    public ItemCreationDialog(CrmService crmService) {
+        super(
+                false,
+                false,
+                true,
+                true);
         this.crmService = crmService;
         this.setWidth(80, Unit.PERCENTAGE);
         this.setHeight(70, Unit.PERCENTAGE);
@@ -42,8 +47,8 @@ public class ItemCreationDialog extends CustomDialog {
         sections.add("Main information");
         this.setHeader(sections);
 
-        this.mainLayout = new VerticalLayout();
-        this.mainLayout.setSizeFull();
+        this.mainLayout = new ChainedVerticalLayout()
+                .withSizeFull();
         this.add(this.mainLayout);
 
         this.item = new ItemEntity();
@@ -99,19 +104,11 @@ public class ItemCreationDialog extends CustomDialog {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            try {
-                this.crmService
-                        .getDocumentService()
-                        .create(
-                                inputStream,
-                                fileName,
-                                event.getMIMEType(),
-                                event.getContentLength());
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            DocumentEntity document = new DocumentEntity();
+            document.setMimeType(event.getMIMEType());
+            document.setSize(event.getContentLength());
+            document.setName(fileName);
+
         });
 
         VerticalLayout rightContainer = new VerticalLayout(upload);
