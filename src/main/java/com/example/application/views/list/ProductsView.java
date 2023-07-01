@@ -7,11 +7,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import framework.ChainedVerticalLayout;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,15 +20,15 @@ import java.util.List;
 @PermitAll
 @Route(value = "/products", layout = MainLayout.class)
 @PageTitle("Products")
-public class ProductsView extends VerticalLayout {
+public class ProductsView extends ChainedVerticalLayout {
 
-    private final VerticalLayout mainLayout;
+    private final ChainedVerticalLayout mainLayout;
     private final boolean initialize;
     @Autowired
     private final CrmService crmService;
 
     public ProductsView(@Autowired CrmService crmService) {
-        this.mainLayout = new VerticalLayout();
+        this.mainLayout = new ChainedVerticalLayout();
         this.mainLayout.setSizeFull();
         this.crmService = crmService;
 

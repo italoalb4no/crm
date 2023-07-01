@@ -3,19 +3,19 @@ package com.example.application.views.list;
 import com.example.application.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import framework.ChainedButton;
+import framework.ChainedVerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
@@ -50,7 +50,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         this.header.addClassName(LumoUtility.Padding.SMALL);
         Image logo = new Image("/images/logo.jpeg", "My logo");
         logo.setWidth("100%");
-        VerticalLayout drawer = new VerticalLayout(logo, this.tabs);
+        ChainedVerticalLayout drawer = new ChainedVerticalLayout(logo, this.tabs);
         drawer.getStyle().set("background-color", "white");
         drawer.setHeightFull();
         this.addToDrawer(drawer);
@@ -62,20 +62,40 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     private void createNavbar() {
-        this.header.add(new Button("logout", click -> this.securityService.logout()));
+
+        this.header.add(
+                new ChainedButton(
+                        "Logout",
+                        click -> this.securityService.logout())
+                        .withClassName(LumoUtility.Margin.Left.AUTO));
     }
 
     private void createPrimaryNavigation() {
         this.tabs = new Tabs();
         this.tabs.addSelectedChangeListener(e -> {
-            this.titleContainer.setText(e.getSelectedTab().getId().orElse(""));
-            this.tabs.getChildren().forEach(tab -> tab.getElement().getStyle().set("background", "white").set("color", "gray").set("padding", "1em"));
-            this.tabs.getSelectedTab().getStyle().set("background", "#5D60EF").set("color", "white").set("padding", "1.2em");
+            this.titleContainer
+                    .setText(e.getSelectedTab().getId().orElse(""));
+            this.tabs.getChildren()
+                    .forEach(tab ->
+                            tab.getElement()
+                                    .getStyle()
+                                    .set("background", "white")
+                                    .set("color", "gray")
+                                    .set("padding", "1em"));
+            this.tabs.getSelectedTab()
+                    .getStyle()
+                    .set("background", "#5D60EF")
+                    .set("color", "white")
+                    .set("padding", "1.2em");
         });
 
-        RouterLink dashboardLink = this.createLink(VaadinIcon.DASHBOARD, "Dashboard");
+        RouterLink dashboardLink = this.createLink(
+                VaadinIcon.DASHBOARD,
+                "Dashboard");
         dashboardLink.setRoute(DashboardView.class);
-        this.dashboardTab = this.createTab(dashboardLink, "Dashboard");
+        this.dashboardTab = this.createTab(
+                dashboardLink,
+                "Dashboard");
 
         RouterLink ordersLink = this.createLink(VaadinIcon.CART, "Orders");
         ordersLink.setRoute(OrdersView.class);
@@ -135,7 +155,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
                 .set("padding", "var(--lumo-space-xs)");
         return icon;
     }
-
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {

@@ -5,32 +5,37 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 
 public class ChainedButton extends Button {
-
-    public Button ChainedButton() {
-        return new Button();
+    public ChainedButton() {
+        super();
     }
 
-    public Button ChainedButton(String text) {
-        return new Button(text);
+    public ChainedButton(String text) {
+        super(text);
     }
 
-    public Button ChainedButton(
+    public ChainedButton(
+            String text,
+            ComponentEventListener<ClickEvent<Button>> clickListener) {
+        super(text, clickListener);
+    }
+
+    public ChainedButton(
             String text,
             Component icon,
             ComponentEventListener<ClickEvent<Button>> clickListener) {
-        return new Button(text, icon, clickListener);
+        super(text, icon, clickListener);
     }
 
-    public Button ChainedButton(
+    public ChainedButton(
+            String text,
+            Component icon) {
+        super(text, icon);
+    }
+
+    public ChainedButton(
             Component icon,
             ComponentEventListener<ClickEvent<Button>> clickListener) {
-        return new Button(icon, clickListener);
-    }
-
-    public Button ChainedButton(
-            String text,
-            ComponentEventListener<ClickEvent<Button>> clickListener) {
-        return new Button(text, clickListener);
+        super(icon, clickListener);
     }
 
     public Button ChainedButton(String text, Component icon) {
@@ -175,6 +180,11 @@ public class ChainedButton extends Button {
 
     public ChainedButton withSizeUndefined() {
         super.setSizeUndefined();
+        return this;
+    }
+
+    public ChainedButton withClassName(String className) {
+        super.setClassName(className);
         return this;
     }
 

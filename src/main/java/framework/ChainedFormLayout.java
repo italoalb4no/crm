@@ -8,8 +8,12 @@ import java.util.List;
 
 public class ChainedFormLayout extends FormLayout {
 
-    public FormLayout ChainedFormLayout() {
-        return new ChainedFormLayout();
+    public ChainedFormLayout() {
+        super();
+    }
+
+    public ChainedFormLayout(Component... components) {
+        super(components);
     }
 
     public ChainedFormLayout withColspan(Component component, int colspan) {

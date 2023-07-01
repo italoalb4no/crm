@@ -10,7 +10,11 @@ public class ChainedVerticalLayout extends VerticalLayout {
         super(children);
     }
 
-    public VerticalLayout ChainedVerticalLayout() {
+    public ChainedVerticalLayout() {
+        super();
+    }
+
+    public VerticalLayout CustomVerticalLayout() {
         return new VerticalLayout();
     }
 

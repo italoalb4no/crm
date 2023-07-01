@@ -10,9 +10,9 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import framework.ChainedVerticalLayout;
 import framework.CustomDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -121,10 +121,9 @@ public class OrderCreationDialog1 extends CustomDialog {
         searchSection.setWidthFull();
         searchSection.setAlignItems(FlexComponent.Alignment.BASELINE);
 
-
         this.createSplitLayout(
-                new VerticalLayout(leftTitle, searchSection),
-                new VerticalLayout(rightTitle, newCustomerBtn));
+                new ChainedVerticalLayout(leftTitle, searchSection),
+                new ChainedVerticalLayout(rightTitle, newCustomerBtn));
 
         this.splitLayout.setSizeFull();
         this.add(this.splitLayout);
@@ -149,14 +148,14 @@ public class OrderCreationDialog1 extends CustomDialog {
         this.getFooter().removeAll();
         this.getFooter().add(this.previousSectionBtn, this.nextSectionBtn);
 
-        this.createSplitLayout(new VerticalLayout(), new VerticalLayout());
+        this.createSplitLayout(new ChainedVerticalLayout(), new ChainedVerticalLayout());
     }
 
     private void lolSection() {
         this.highlightSection(3);
     }
 
-    private void createSplitLayout(VerticalLayout leftContainer, VerticalLayout rightContainer) {
+    private void createSplitLayout(ChainedVerticalLayout leftContainer, ChainedVerticalLayout rightContainer) {
         leftContainer.setAlignItems(FlexComponent.Alignment.CENTER);
         leftContainer.setHeightFull();
         leftContainer.setWidth(50, Unit.PERCENTAGE);

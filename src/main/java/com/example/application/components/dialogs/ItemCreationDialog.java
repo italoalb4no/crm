@@ -9,7 +9,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -62,7 +61,9 @@ public class ItemCreationDialog extends CustomDialog {
         this.mainLayout.removeAll();
 
         this.getFooter().removeAll();
-        this.nextSectionBtn = new Button("Go on", VaadinIcon.ARROW_RIGHT.create());
+        this.nextSectionBtn = new Button(
+                "Go on",
+                VaadinIcon.ARROW_RIGHT.create());
         this.getFooter().add(this.nextSectionBtn);
         this.nextSectionBtn.setEnabled(false);
 
@@ -92,7 +93,7 @@ public class ItemCreationDialog extends CustomDialog {
         // formLayout.setColspan(priceField, 1);
         formLayout.setSizeFull();
 
-        VerticalLayout leftContainer = new VerticalLayout(formLayout);
+        ChainedVerticalLayout leftContainer = new ChainedVerticalLayout(formLayout);
         leftContainer.setHeightFull();
         leftContainer.setWidth(50, Unit.PERCENTAGE);
 
@@ -111,7 +112,7 @@ public class ItemCreationDialog extends CustomDialog {
 
         });
 
-        VerticalLayout rightContainer = new VerticalLayout(upload);
+        ChainedVerticalLayout rightContainer = new ChainedVerticalLayout(upload);
         rightContainer.setHeightFull();
         rightContainer.setWidth(50, Unit.PERCENTAGE);
 

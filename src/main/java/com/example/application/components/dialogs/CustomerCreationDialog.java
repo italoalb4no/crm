@@ -17,10 +17,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import framework.ChainedVerticalLayout;
 import framework.CustomDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,7 +31,7 @@ import java.util.List;
 public class CustomerCreationDialog extends CustomDialog {
 
     private final CrmService omniService;
-    private final VerticalLayout mainLayout;
+    private final ChainedVerticalLayout mainLayout;
     private final CustomerEntity customer;
     private Button nextSectionBtn;
     private Button previousSectionBtn;
@@ -48,7 +48,7 @@ public class CustomerCreationDialog extends CustomDialog {
         topContainer.setWidthFull();
         topContainer.setHeight("auto");
 
-        this.mainLayout = new VerticalLayout();
+        this.mainLayout = new ChainedVerticalLayout();
         this.mainLayout.setSizeFull();
         this.add(this.mainLayout);
 
@@ -117,12 +117,12 @@ public class CustomerCreationDialog extends CustomDialog {
         rightDetails.setWidth(90, Unit.PERCENTAGE);
         rightDetails.setOpened(true);
 
-        VerticalLayout leftSection = new VerticalLayout(
+        ChainedVerticalLayout leftSection = new ChainedVerticalLayout(
                 leftDetails,
                 leftButton);
         leftSection.setHeightFull();
 
-        VerticalLayout rightSection = new VerticalLayout(
+        ChainedVerticalLayout rightSection = new ChainedVerticalLayout(
                 rightDetails,
                 rightButton);
         rightSection.setHeightFull();
