@@ -1,8 +1,8 @@
 package com.italoalbano.crm.application.components.dialogs;
 
-import com.italoalbano.crm.application.data.entity.DocumentEntity;
 import com.italoalbano.crm.application.data.entity.ItemEntity;
 import com.italoalbano.crm.application.data.service.CrmService;
+import com.italoalbano.crm.application.dto.DocumentDTO;
 import com.italoalbano.framework.ChainedFormLayout;
 import com.italoalbano.framework.ChainedTextArea;
 import com.italoalbano.framework.ChainedVerticalLayout;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ItemCreationDialog extends CustomDialog {
@@ -29,6 +30,7 @@ public class ItemCreationDialog extends CustomDialog {
     private final CrmService crmService;
     private final ChainedVerticalLayout mainLayout;
     private final ItemEntity item;
+    private HashSet<DocumentDTO> documents;
     private Button nextSectionBtn;
 
     @Autowired
@@ -84,8 +86,7 @@ public class ItemCreationDialog extends CustomDialog {
                 .withMaxLength(500)
                 .withValueChangeMode(ValueChangeMode.EAGER)
                 .withValueChangeListener(e -> {
-                    e.getSource()
-                            .setHelperText(e.getValue().length() + "/" + 500);
+                    e.getSource().setHelperText(e.getValue().length() + "/" + 500);
                 });
 
         ChainedFormLayout formLayout = new ChainedFormLayout(
@@ -106,25 +107,14 @@ public class ItemCreationDialog extends CustomDialog {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            DocumentEntity document = new DocumentEntity();
-            document.setMimeType(event.getMIMEType());
-            document.setSize(event.getContentLength());
-            document.setName(fileName);
+            DocumentDTO documentDTO = new DocumentDTO();
+            documentDTO
+                    .withInputStream(inputStream)
+                    .withMimeType(event.getMIMEType())
+                    .withSize(event.getContentLength())
+                    .withName(fileName);
 
-            // Save images somewhere and then call the api to store them
-
-//            try {
-//                this.crmService.getDocumentService().create(
-//                        inputStream,
-//                        fileName,
-//                        event.getMIMEType(),
-//                        event.getContentLength());
-//            } catch (NoSuchAlgorithmException e) {
-//                throw new RuntimeException(e);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-
+            this.documents.add(documentDTO);
         });
 
         ChainedVerticalLayout rightContainer = new ChainedVerticalLayout(upload);
