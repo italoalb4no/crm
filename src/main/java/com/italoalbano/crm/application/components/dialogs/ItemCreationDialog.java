@@ -3,10 +3,7 @@ package com.italoalbano.crm.application.components.dialogs;
 import com.italoalbano.crm.application.data.entity.ItemEntity;
 import com.italoalbano.crm.application.data.service.CrmService;
 import com.italoalbano.crm.application.dto.DocumentDTO;
-import com.italoalbano.framework.ChainedFormLayout;
-import com.italoalbano.framework.ChainedTextArea;
-import com.italoalbano.framework.ChainedVerticalLayout;
-import com.italoalbano.framework.CustomDialog;
+import com.italoalbano.framework.*;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -18,6 +15,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
@@ -39,7 +37,8 @@ public class ItemCreationDialog extends CustomDialog {
                 false,
                 false,
                 true,
-                true);
+                true
+        );
         this.crmService = crmService;
         this.setWidth(80, Unit.PERCENTAGE);
         this.setHeight(70, Unit.PERCENTAGE);
@@ -55,6 +54,7 @@ public class ItemCreationDialog extends CustomDialog {
         this.item = new ItemEntity();
 
         this.mainInfoSection();
+
     }
 
     private void mainInfoSection() {
@@ -107,19 +107,26 @@ public class ItemCreationDialog extends CustomDialog {
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            DocumentDTO documentDTO = new DocumentDTO();
-            documentDTO
-                    .withInputStream(inputStream)
-                    .withMimeType(event.getMIMEType())
-                    .withSize(event.getContentLength())
-                    .withName(fileName);
+            DocumentDTO documentDTO = new DocumentDTO(
+                    null,
+                    fileName,
+                    event.getMIMEType(),
+                    null,
+                    event.getContentLength(),
+                    inputStream
+            );
 
             this.documents.add(documentDTO);
         });
 
-        ChainedVerticalLayout rightContainer = new ChainedVerticalLayout(upload);
-        rightContainer.setHeightFull();
-        rightContainer.setWidth(50, Unit.PERCENTAGE);
+        ChainedHorizontalLayout documentsPreview = new ChainedHorizontalLayout()
+                .withWidthFull()
+                .withHeight(20, Unit.PERCENTAGE)
+                .withClassNames(LumoUtility.Overflow.HIDDEN, LumoUtility.Background.CONTRAST_5);
+
+        ChainedVerticalLayout rightContainer = new ChainedVerticalLayout(upload, documentsPreview)
+                .withHeightFull()
+                .withWidth(50, Unit.PERCENTAGE);
 
         SplitLayout splitLayout = new SplitLayout(leftContainer, rightContainer);
         splitLayout.setSizeFull();

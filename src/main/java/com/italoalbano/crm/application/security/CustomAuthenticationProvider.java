@@ -28,8 +28,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         if (canLogin(name, password)) {
-            return new UsernamePasswordAuthenticationToken(
-                    name, password, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
         } else {
             return null;
         }
@@ -45,13 +44,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (userDetails == null) {
             // User not found
             return false;
-        } else {
-            // Add encryption
-            // userDetails.getPassword().equals(password)
-            // BCrypt.checkpw(password, userDetails.getPassword())
-            return BCrypt.checkpw(password, userDetails.getPassword());
-            // Wrong password
-
         }
+        // Add encryption
+        // userDetails.getPassword().equals(password)
+        // BCrypt.checkpw(password, userDetails.getPassword())
+        return BCrypt.checkpw(password, userDetails.getPassword());
+        // Wrong password
     }
 }
